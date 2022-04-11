@@ -1,43 +1,81 @@
+'''
+Converts audio files to TL format
+
+© Nashville Public Library
+© Ben Weddle is to blame for this code. Anyone is free to use it.
+'''
+
 import glob
-import sys, os
+import os
+import subprocess
 
-#this is only needed when converting to an exe file
-def resource_path(relative_path):
-    """ Get the absolute path to the resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+supported_formats = ['mp3', 'wav', 'm4a', 'flac']
 
-    return os.path.join(base_path, relative_path)
+file_types = glob.glob(f'*.{supported_formats[0]}') + glob.glob(f'*.{supported_formats[1]}') + \
+glob.glob(f'*.{supported_formats[2]}') + glob.glob(f'*.{supported_formats[3]}')
 
-#this is where the regular program starts
-print ("Just a moment...")
+cd = os.getcwd() #current directory
 
-for f in glob.glob("*.mp3"):
-    origname=(f)
-    os.rename(f, "input.mp3")
-    os.system("ffmpeg -hide_banner -loglevel quiet -i input.mp3 output.wav")
+yes = ['yes', 'Yes', 'YES' 'Y', 'y']
+
+def convert(file):
+    '''convert file with ffmpeg, etc. TODO, add better explanation'''
+    subprocess.run('cls', shell=True)
+    print('Just a moment...')
+    subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i "{file}" -ac 1 -ar 44100 output.wav', shell=True)
     #when converting to exe file, change the above line to:
     #os.system(resource_path("ffmpeg -hide_banner -loglevel quiet -i input.mp3 -ar 44100 -ac 1 output.wav"))
-    os.rename("output.wav", origname)
-    base = os.path.splitext(origname)[0]
-    os.rename(origname, base + '.wav')
-    os.remove("input.mp3")
+    os.remove(file)
+    os.rename("output.wav", file)
+    base = os.path.splitext(file)[0]
+    os.rename(file, base + '.wav')
+    subprocess.run('cls', shell=True)
 
-for f in glob.glob("*.wav"):
-    origname=(f)
-    os.rename(f, "input.wav")
-    os.system("ffmpeg -hide_banner -loglevel quiet -i input.wav -ac 1 output.wav")
-    #when converting to exe file, change the above line to:
-    #os.system(resource_path("ffmpeg -hide_banner -loglevel quiet -i input.wav -ar 44100 -ac 1 output.wav"))
-    os.rename("output.wav", origname)
-    os.remove("input.wav")
+def check_exists():
+    '''check whether there are any audio files in current directory'''
+    if len(file_types) >= 1:
+        pass
+    else:
+        subprocess.run('cls', shell=True)
+        print(f"I can't find any {supported_formats} files in {cd}. Sorry about that.\n\n\
+Do you want to try again?\n")
+        answer = input('Y/N ')
+        if answer in yes:
+            prompt()
+        else:
+            quit()
+def quit():
+    '''print message and exit script'''
+    subprocess.run('cls', shell=True)
+    print('Thanks, have a good one.')
+    print()
+    input('(press enter to quit)')
+    exit()
 
-os.system("cls")
-print ("All done!")
-print () #for prettier spacing
-input ("(press ENTER to quit)")
+def prompt():
+    '''print welcome message, ask if user is sure they want to proceed. depending on answer, call functions.'''
+    subprocess.run('cls', shell=True)
+    print('--------------------CONVERT--------------------')
+    print()
+    print(f'This will convert the audio files in {cd} to WAV files')
+    print()
+    print('Are you sure you want to convert these files? It cannot be undone.')
+    print()
+    answer = input('Y/N ')
+    if answer in yes:
+        check_exists()
+        for f in file_types:
+            convert(file=f)
+        print('Your files are converted. Enjoy')
+        print()
+        input('(press enter to quit)')
+    else:
+        subprocess.run('cls', shell=True)
+        not_yes = input(f'You typed {answer}, so nothing was converted. \n\n\
+type "y" to start over or anything else to quit: ')
+        if not_yes in yes:
+            prompt()
+        else:
+            quit()
 
-    
+prompt()
