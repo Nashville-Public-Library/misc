@@ -5,5 +5,5 @@ This uses ffmpeg to do the converting.
 **You must have [ffmpeg](https://www.ffmpeg.org) installed and added to terminal PATH**
 
 
-(also an old batch file, for reference)
+(also an old batch script, for reference)
 
