@@ -1,6 +1,8 @@
 '''
 Converts audio files to TL format
 
+*****You need ffmpeg installed and added to your PATH*****
+
 © Nashville Public Library
 © Ben Weddle is to blame for this code. Anyone is free to use it.
 '''
