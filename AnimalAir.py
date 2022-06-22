@@ -1,10 +1,13 @@
 '''
-Check local folder for today's segment. If available, convert to our format, and transfer to destination(s).
-If not available, send notification.
+Select a random audio file from the source folder,
+making sure not to use the same file as yesterday.
+Then convert, transfer, and do some checks.
+
+Do not remove the source file you use. Since there are 
+only 12 files each month, each file will need to be
+reused at least once throughout the month.
 
 TODO !!!write a new comment here!!!
-
-This is for segments without a date attached.
 
 © Nashville Public Library
 © Ben Weddle is to blame for this code. Anyone is free to use it.
@@ -27,7 +30,7 @@ import glob
 #-----change these for each new program-----
 
 show = 'Animal Airwaves' # for notifications
-output_file = 'Tenn-AnimalAir.wav' #name of file
+output_file = 'Tenn-AnimalAir.wav' #name of file with .wav extension
 folder = (r'C:\Users\wrprod\Desktop\AnimalAir') #path to source files
 
 # these are for checking whether the length (in minutes!) of the file is outside of a range.
@@ -46,19 +49,25 @@ check_if_below = .9
 # If you need to change them, change them there, not here!
 destinations = [os.environ['OnAirPC'], os.environ['ProductionPC']]
 
-short_day = datetime.now().strftime('%a')
 timestamp = datetime.now().strftime('%H:%M:%S on %d %b %Y')
 
 def convert(input):
-    '''convert with ffmpeg and continue'''
+    '''Convert with ffmpeg and continue'''
     syslog(message=f'{show}: Converting to TL format.')
     subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i {input} -ar 44100 -ac 1 -af loudnorm=I=-21 -y {output_file}')
-    check_length(fileToCheck=output_file) #call this before removing the files
+    check_length(fileToCheck=output_file)
+    # do not remove the source file! these rotate each daily,
+    # and we keep them for a month.
     copy(fileToCopy=output_file)
     remove(fileToDelete=output_file)
 
 def copy(fileToCopy):
-    '''TODO explain'''
+    '''
+    Copy file to destinations. 
+    As for how the number of destinations
+    iteration works, you'll just have to stare at it for a while.
+    It took me a while to write and I tried to explain it but cannot.
+    '''
     numberOfDestinations = len(destinations)
     numberOfDestinations = numberOfDestinations - 1
     while numberOfDestinations >= 0:
@@ -75,7 +84,7 @@ def check_downloaded_file(input_file):
     '''TODO explain'''
     filesize = os.path.getsize(input_file)
     if filesize > 0:
-        syslog(message=f'{show} is not empty...continuing...')
+        syslog(message=f'{show}: {input_file} is not empty')
         convert(input=input_file)
     else:
         to_send = (f"There was a problem with {show}.\n\n\
@@ -129,6 +138,7 @@ def send_sms(message):
 def notify(message, subject):
     '''TODO: explain'''
     weekend = ['Sat', 'Sun']
+    short_day = datetime.now().strftime('%a')
     if short_day in weekend:
         send_sms(message=message) 
         send_mail(message=message, subject=subject)
