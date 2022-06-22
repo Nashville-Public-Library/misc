@@ -10,9 +10,6 @@ This is for segments without a date attached.
 © Ben Weddle is to blame for this code. Anyone is free to use it.
 '''
 
-from email import message
-from email.mime import audio
-import xml.etree.ElementTree as ET
 import subprocess
 from datetime import datetime
 import shutil
@@ -149,7 +146,7 @@ def check_file_transferred(fileToCheck):
             os.path.isfile(f'{destinations[numberOfDestinations]}\{fileToCheck}')
             numberOfDestinations = numberOfDestinations-1
             syslog(message=f'{show} arrived at {destinations[numberOfDestinations]}')
-        #countdown()
+        countdown()
     except:
         to_send = (f"There was a problem with {show}.\n\n\
 It looks like the file either wasn't converted or didn't transfer correctly. \
@@ -219,6 +216,25 @@ def matchName():
             fileExists = audioFile
             whoops = True
     return whoops, fileExists
+
+def countdown():
+    '''
+        the reason for this is to give a visual cue to the user
+        that the script has finished and is about to exit.
+        Otherwise, the user does not know what happened; they
+        just see the screen disappear.
+    '''
+    os.system('cls')
+    toSend = f'{show}: All Done.'
+    syslog(message=toSend)
+    print(toSend)
+    print()
+    number = 5
+    i = 0
+    while i < number:
+        print(f'This window will close in {number} seconds...', end='\r')
+        number = number-1
+        time.sleep(1)
 
 
 #BEGIN
