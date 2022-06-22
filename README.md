@@ -8,3 +8,6 @@ Uses ffmpeg.
 **You must have [ffmpeg](https://www.ffmpeg.org) installed and added to terminal PATH**
 
 
+## AnimalAir.py
+
+TL Script to process Animal Airwaves each day.
