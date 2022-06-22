@@ -189,7 +189,7 @@ def compareToYesterday():
     yesterday = open('yesterday.txt', 'r')
     yesterday = yesterday.read()
     todayGuess = guessNumber()
-
+    syslog(message=f'{show}: Generating random number and comparing to yesterday')
     while todayGuess == yesterday:
         todayGuess = guessNumber()
         if todayGuess != yesterday:
@@ -238,20 +238,21 @@ def countdown():
 
 
 #BEGIN
-print(f"I'm working on {show}. Just a moment...")
-syslog(message=f'{show}: Starting script')
+if __name__ == "__main__":
+    print(f"I'm working on {show}. Just a moment...")
+    syslog(message=f'{show}: Starting script')
 
-fileExists, pathToFile = matchName()
-if fileExists == True:
-    check_downloaded_file(input_file=pathToFile)
-else:
-    to_send = (f"There was a problem with {show}. \n\n\
-It looks like the source file doesn't exist. \
-Please check manually! Yesterday's file will remain.\n\n\
-{timestamp}")
-    notify(message=to_send, subject='Error')
-    os.system('cls')
-    print(to_send)
-    print()
-    input('(press enter to close this window)') #force user to acknowledge
+    fileExists, pathToFile = matchName()
+    if fileExists == True:
+        check_downloaded_file(input_file=pathToFile)
+    else:
+        to_send = (f"There was a problem with {show}. \n\n\
+    It looks like the source file doesn't exist. \
+    Please check manually! Yesterday's file will remain.\n\n\
+    {timestamp}")
+        notify(message=to_send, subject='Error')
+        os.system('cls')
+        print(to_send)
+        print()
+        input('(press enter to close this window)') #force user to acknowledge
  
