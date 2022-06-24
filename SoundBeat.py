@@ -71,6 +71,7 @@ def copy(fileToCopy):
 
 def remove(fileToDelete):
     '''TODO explain'''
+    syslog(message=f'{show}: Removing {fileToDelete}')
     os.remove(fileToDelete)
 
 def check_downloaded_file(input_file):
