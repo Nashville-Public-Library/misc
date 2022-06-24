@@ -1,11 +1,6 @@
 '''
-Select a random audio file from the source folder,
-making sure not to use the same file as yesterday.
-Then convert, transfer, and do some checks.
-
-Do not remove the source file you use. Since there are 
-only 12 files each month, each file will need to be
-reused at least once throughout the month.
+Use the dictionary to select a the audio file from the source folder, 
+then convert, transfer, and do some checks.
 
 TODO !!!write a new comment here!!!
 
@@ -24,20 +19,19 @@ import smtplib
 from email.message import EmailMessage
 import time
 from twilio.rest import Client
-import random
 import glob
 
 #-----change these for each new program-----
 
-show = 'Animal Airwaves' # for notifications
-output_file = 'Tenn-AnimalAir.wav' #name of file with .wav extension
-folder = (r'C:\Users\wrprod\Desktop\AnimalAir') #path to source files
+show = 'Sound Beat' # for notifications
+output_file = 'Tenn-SoundBeat.wav' #name of file with .wav extension
+folder = (r'C:\Users\wrprod\Desktop\SoundBeat') #path to source files
 
 # these are for checking whether the length (in minutes!) of the file is outside of a range.
 # used for notification only
 # decimal numbers are OK.
-check_if_above = 1.1
-check_if_below = .9
+check_if_above = 1.51
+check_if_below = 1.49
 
 '''
     -------------------------------------------------------------------------------
@@ -54,18 +48,17 @@ timestamp = datetime.now().strftime('%H:%M:%S on %d %b %Y')
 def convert(input):
     '''Convert with ffmpeg and continue'''
     syslog(message=f'{show}: Converting to TL format.')
-    subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i {input} -ar 44100 -ac 1 -af loudnorm=I=-21 -y {output_file}')
+    # using quotes around input in case the file has spaces in it.
+    subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i "{input}" -ar 44100 -ac 1 -af loudnorm=I=-21 -y {output_file}')
     check_length(fileToCheck=output_file)
-    # do not remove the source file! these rotate each daily,
-    # and we keep them for a month.
     copy(fileToCopy=output_file)
     remove(fileToDelete=output_file)
+    remove(fileToDelete=input)
 
 def copy(fileToCopy):
     '''
     Copy file to destinations. 
-    As for how the number of destinations
-    iteration works, you'll just have to stare at it for a while.
+    As for how the number of destinations iteration works, you'll just have to stare at it for a while.
     It took me a while to write and I tried to explain it but cannot.
     '''
     numberOfDestinations = len(destinations)
@@ -189,43 +182,27 @@ This is unusual and could indicate a problem with the file. Please check manuall
         notify(message=to_send, subject='Check Length')
     else: syslog(message=f'{show} is {duration} minute(s)')
 
-def guessNumber():
-    guess = random.randint(1, 12)
-    guess = (f'{guess:02d}')
-    guess = str(guess)
-    return guess
-
-def compareToYesterday():
-    yesterday = open('yesterday.txt', 'r')
-    yesterday = yesterday.read()
-    todayGuess = guessNumber()
-    syslog(message=f'{show}: Generating random number and comparing to yesterday')
-    while todayGuess == yesterday:
-        todayGuess = guessNumber()
-        if todayGuess != yesterday:
-            break
-        else: 
-            pass
-
-    overwriteFile(num=todayGuess)
-    return todayGuess
-
-def overwriteFile(num):
-    overwrite = open('yesterday.txt', 'w')
-    overwrite.write(num)
-    overwrite.close
-
 def matchName():
-    segment = compareToYesterday()
-    segment = f'SGMT{segment}'
-    whoops = False
-    fileExists = None
-    for audioFile in glob.glob(f'{folder}\*.wav'):
-        if segment in audioFile:
-            syslog(message=f'{show}: Attempting to use segment: {segment}')
-            fileExists = audioFile
-            whoops = True
-    return whoops, fileExists
+    '''TODO explain this'''
+    dict = {
+    'Mon': 'SGMT01',
+    'Tue': 'SGMT02',
+    'Wed': 'SGMT03',
+    'Thu': 'SGMT04',
+    'Fri': 'SGMT05'
+    }
+    sourceFileExists = False
+    fileToUse = None
+    day_abbr = datetime.now().strftime("%a")
+    sgmt = dict.get(day_abbr)
+    files = glob.glob(f'{folder}\*.wav')
+    for file in files:
+        if sgmt in file:
+            syslog(message=f'{show}: Attempting to use segment: {sgmt}')
+            fileToUse = file
+            sourceFileExists = True
+    return sourceFileExists, fileToUse
+
 
 def countdown():
     '''
@@ -246,7 +223,6 @@ def countdown():
         number = number-1
         time.sleep(1)
 
-
 #BEGIN
 if __name__ == "__main__":
     print(f"I'm working on {show}. Just a moment...")
@@ -257,12 +233,13 @@ if __name__ == "__main__":
         check_downloaded_file(input_file=pathToFile)
     else:
         to_send = (f"There was a problem with {show}. \n\n\
-    It looks like the source file doesn't exist. \
-    Please check manually! Yesterday's file will remain.\n\n\
-    {timestamp}")
+It looks like the source file doesn't exist. \
+Please check manually! Yesterday's file will remain.\n\n\
+{timestamp}")
         notify(message=to_send, subject='Error')
         os.system('cls')
         print(to_send)
         print()
         input('(press enter to close this window)') #force user to acknowledge
+ 
  
