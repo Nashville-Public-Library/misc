@@ -2,18 +2,19 @@
 
 MISC Python scripts to automate various tasks at the TL.
 
-For all of these scripts, **you must have a Windows [FFmpeg](https://www.ffmpeg.org) binary installed and added to the PATH**
+For *all* these scripts, **you must have a Windows [FFmpeg](https://www.ffmpeg.org) binary installed and added to the PATH**. FFmpeg is open source (and free!) software.
 
-Some also use Twilio, which is not in the standard library and needs to be installed via PIP. Store the Twilio credentials in environment variables on the PCs.
+Some scripts also use Twilio, which is not in the Python standard library and needs to be installed via PIP. Store the Twilio credentials in environment variables on the PCs.
 
-Actually, a number of variables used in these scripts are stored in environment variables. Make sure to check these.
+Actually, a number of variables used in these scripts are stored in environment variables. Make sure to check those.
 
-We run most of these scripts via WireReady (WR). From WR we call a Batch script which in turn calls the Python script. The batch script ensures we CD to the current directory. Make sure the Batch & Python scripts are in the same directory.
-
----
-
-## wav.py
-Python script to convert audio files of various types to TL broadcast format (mono, 44.1kHz, 16 bit wav files).
+We run most of these scripts via WireReady (WR).
+- The "Run" command in WR defaults to running from a different directory AND a different drive letter. This causes confusion.
+- WR also does not run `.py` files by default. For this reason and more, we do not run `.py` files directly from WR.
+- Instead, we tell WR to run a Batch script (`.bat` file) which in turn will run the Python script (`.py` file). 
+- The batch script ensures we CD to the current directory.
+- Ensure the Batch & Python scripts are in the same directory.
+- A sample `.bat` file (`Example.bat`) is inlcuded in this repo.
 
 ---
 
@@ -29,4 +30,10 @@ TL script to process Animal Airwaves (AA) each day.
     - is in the same directory as the `.py` file
     - contains a single number between between 1 and 12 and does not contain anything else
     - after this set up you will not need to edit or do anything with this file. I inlcude this here so you know you *must* have this file for the script to run. TODO An improvement to this script would be to check whether the file exists and, if not, create it for you.
-- 
+
+---
+
+## wav.py
+Python script to convert audio files of various types to TL broadcast format (mono, 44.1kHz, 16 bit wav files).
+- can be used to convert files from Content Depot
+- works fine but needs improvement
