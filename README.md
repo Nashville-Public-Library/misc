@@ -1,19 +1,21 @@
 # MISC 
 
-MISC Python scripts to automate various tasks at the TL.
+### This repo contains MISC Python scripts to automate various tasks at the TL.
 
-For *all* these scripts, **you must have an [FFmpeg](https://www.ffmpeg.org) Windows binary installed and added to the PATH**. FFmpeg is open source (and free!) software.
+For *all* these scripts, you must have Python 3.10.1+ **AND Windows binaries for the following installed on the PC and added to the PATH**:
+- [FFmpeg](https://www.ffmpeg.org) AND FFprobe
+- [WGET](https://www.gnu.org/software/wget/)
 
-Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP (`pip install twilio`). Store the Twilio credentials in environment variables on the PCs.
+Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP (`pip install twilio`). Store the Twilio credentials in environment variables on the PCs. The alternative is to use `curl` and long, complicated URLs.
 
-In fact, a number of variables used in these scripts are stored in environment variables. For example:
+### In fact, a number of variables used in these scripts are stored in environment variables. For example:
 - syslog server
 - mail server
 - Twilio "to" and "from" numbers
 - And more. Make sure to check all of them. 
 
 
-We run most of these scripts via WireReady (WR).
+### We run most of these scripts via WireReady (WR)
 - The "Run" command in WR defaults to running from a different directory AND a different drive letter. This causes confusion.
 - WR also does not run `.py` files by default. 
 - For these reasons and more, we do not run `.py` files directly from WR.
