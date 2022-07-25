@@ -4,7 +4,7 @@ MISC Python scripts to automate various tasks at the TL.
 
 For *all* these scripts, **you must have an [FFmpeg](https://www.ffmpeg.org) Windows binary installed and added to the PATH**. FFmpeg is open source (and free!) software.
 
-Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP. Store the Twilio credentials in environment variables on the PCs.
+Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP (`pip install twilio`). Store the Twilio credentials in environment variables on the PCs.
 
 In fact, a number of variables used in these scripts are stored in environment variables. For example:
 - syslog server
@@ -22,7 +22,9 @@ We run most of these scripts via WireReady (WR).
 - Ensure the Batch & Python scripts are in the same directory.
 - A sample `.bat` file (`Example.bat`) is inlcuded in this repo.
 
-It's best to avoid spaces in filenames. If your audio filenames have spaces in them, the FFmpeg commands will need to be changed.
+As a general note: It's best to avoid spaces in filenames. If your audio filenames have spaces in them, the FFmpeg commands will need to be changed.
+
+### The scripts should be fairly straightfoward and self-explanatory but below are some helpful notes.
 
 ---
 
@@ -36,8 +38,9 @@ TL script to process Animal Airwaves (AA) each day.
 - Make sure there is a  `yesterday.txt` file that: 
     - exists
     - is in the same directory as the `.py` file
-    - contains a single number between between 1 and 12 and does not contain anything else
-    - after this set up you will not need to edit or do anything with this file. I inlcude this here so you know you *must* have this file for the script to run. TODO An improvement to this script would be to check whether the file exists and, if not, create it for you.
+    - contains one number between between 1 and 12 and **does not contain anything else**
+    - after this set up you will not need to edit or do anything with this file. I inlcude this here so you know you *must* have this file for the script to run. 
+    - *(An improvement to this script would be to check whether the file exists and, if not, create it for you)*
 
 -----
 
@@ -55,3 +58,8 @@ TL script to process Sound Beat (SB) each weekday.
 Python script to convert audio files of various types to TL broadcast format: mono, 44.1kHz, 16 bit wav files (PCM s16le).
 - can be used to convert files from Content Depot
 - works fine but needs improvement
+
+---
+© Nashville Public Library
+
+© Ben Weddle is to blame for this code. Anyone is free to use it.
