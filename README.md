@@ -1,18 +1,18 @@
 # MISC 
 
-### This repo contains MISC Python scripts to automate various tasks at the TL.
+### This repo contains Python scripts to automate MISC tasks at the TL.
 
-For *all* these scripts, you must have Python 3.10.1+ **AND Windows binaries for the following installed on the PC and added to the PATH**:
-- [FFmpeg](https://www.ffmpeg.org) AND FFprobe
-- [WGET](https://www.gnu.org/software/wget/)
+#
 
-Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP (`pip install twilio`). Store the Twilio credentials in environment variables on the PCs. The alternative is to use `curl` and long, complicated URLs.
+For *all* these scripts, you must have Python 3.10.1+ AND Windows binaries for [FFmpeg](https://www.ffmpeg.org) **AND** FFprobe installed on the PC and added to the PATH.
+
+Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP (`pip install twilio`). Store the Twilio credentials in environment variables on the PCs. The alternative is to use `curl` with long, complicated URLs.
 
 ### In fact, a number of variables used in these scripts are stored in environment variables. For example:
 - syslog server
 - mail server
 - Twilio "to" and "from" numbers
-- And more. Make sure to check all of them. 
+- And more. Make sure to check all of them.
 
 
 ### We run most of these scripts via WireReady (WR)
@@ -24,16 +24,16 @@ Some scripts also use Twilio for notifications. There is a Twilio library for Py
 - Ensure the Batch & Python scripts are in the same directory.
 - A sample `.bat` file (`Example.bat`) is inlcuded in this repo.
 
-As a general note: It's best to avoid spaces in filenames. If your audio filenames have spaces in them, the FFmpeg commands will need to be changed.
+As a general note: It's best to avoid spaces in your audio filenames. If your audio filenames have spaces in them, the FFmpeg commands will need to be changed.
 
-### The scripts should be fairly straightfoward and self-explanatory but below are some helpful notes.
+### The scripts should be fairly straightfoward and self-explanatory but below are some general notes.
 
 ---
 
 ## AnimalAir.py
 
 TL script to process Animal Airwaves (AA) each day.
-- We are provided 12 episodes of AA per month. Download them at the beginning of each month from Content Depot.
+- We are provided 12 episodes of AA per month. Download them all together at the beginning of each month from Content Depot.
 - Place all 12 files in the local folder listed in the script (delete last month's files).
 - Since there are only 12 episodes, but we need to air it every day, we will usually need to air each episode more than once.
 - The script will randomize which episode is used each day, ensuring the same episode never airs two days in a row.
@@ -43,7 +43,7 @@ TL script to process Animal Airwaves (AA) each day.
     - contains one number between between 1 and 12 and **does not contain anything else**
     - after this set up you will not need to edit or do anything with this file. I inlcude this here so you know you *must* have this file for the script to run. 
     - *(An improvement to this script would be to check whether the file exists and, if not, create it for you)*
-- Note that the source files are **not** deleted automatically by running the script. This is because we re-air them throughout the month.
+- Note that the original source files are *not* deleted when the script runs. This is because we re-air them throughout the month.
 
 -----
 ## BirdNote.py
