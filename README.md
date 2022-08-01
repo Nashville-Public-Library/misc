@@ -50,7 +50,7 @@ TL script to process Animal Airwaves (AA) each day.
 
 TL script to process Bird Note (BN) each weekday.
 - We are provided 7 episodes of BN per week - one for each day of the week. Download them all together every Wednesday from Content Depot.
-- Place all 7 files in the local folder listed in the script (delete last week's files).
+- Place all 7 files in the local folder listed in the script. There should not be any files in the folder on Wednesday, but if there are, delete them.
 - Each filename contains `SGMT` followed by a number, such as `SGMT05`.
  - `01` is intended for Wednesday, `02` for Thursday, ... and `07` is for Tuesday.
  - This script matches the day of the week to a specific filename, then processes that file.
@@ -59,7 +59,7 @@ TL script to process Bird Note (BN) each weekday.
 
 TL script to process Sound Beat (SB) each weekday.
 - We are provided 5 episodes of SB per week - one for each weekday. Download them all together every Monday from Content Depot.
-- Place all 5 files in a local folder (delete last week's files)
+- Place all 5 files in the local folder listed in the script. There should not be any files in the SB folder on Monday, but if there are, delete them.
 - Each filename contains `SGMT` followed by a number, such as `SGMT03`.
  - `01` is intended for Monday, `02` for Tuesday, and so on.
  - This script matches the day of the week to a specific filename, then processes that file.
