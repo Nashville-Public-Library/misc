@@ -2,8 +2,6 @@
 
 ### This repo contains Python scripts to automate MISC tasks at the TL.
 
-#
-
 For *all* these scripts, you must have Python 3.10.1+ AND Windows binaries for [FFmpeg](https://www.ffmpeg.org) **AND** FFprobe installed on the PC and added to the PATH.
 
 Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP (`pip install twilio`). Store the Twilio credentials in environment variables on the PCs. The alternative is to use `curl` with long, complicated URLs.
