@@ -34,7 +34,7 @@ As a general note: It's best to avoid spaces in filenames. If your audio filenam
 
 TL script to process Animal Airwaves (AA) each day.
 - We are provided 12 episodes of AA per month. Download them at the beginning of each month from Content Depot.
-- Place all 12 files in a local folder (delete last month's files)
+- Place all 12 files in the local folder listed in the script (delete last month's files).
 - Since there are only 12 episodes, but we need to air it every day, we will usually need to air each episode more than once.
 - The script will randomize which episode is used each day, ensuring the same episode never airs two days in a row.
 - Make sure there is a  `yesterday.txt` file that: 
@@ -43,12 +43,22 @@ TL script to process Animal Airwaves (AA) each day.
     - contains one number between between 1 and 12 and **does not contain anything else**
     - after this set up you will not need to edit or do anything with this file. I inlcude this here so you know you *must* have this file for the script to run. 
     - *(An improvement to this script would be to check whether the file exists and, if not, create it for you)*
+- Note that the source files are **not** deleted automatically by running the script. This is because we re-air them throughout the month.
 
 -----
+## BirdNote.py
 
+TL script to process Bird Note (BN) each weekday.
+- We are provided 7 episodes of BN per week - one for each day of the week. Download them all together every Wednesday from Content Depot.
+- Place all 7 files in the local folder listed in the script (delete last week's files).
+- Each filename contains `SGMT` followed by a number, such as `SGMT05`.
+ - `01` is intended for Wednesday, `02` for Thursday, ... and `07` is for Tuesday.
+ - This script matches the day of the week to a specific filename, then processes that file.
+-----
 ## SoundBeat.py
+
 TL script to process Sound Beat (SB) each weekday.
-- We are provided 5 episodes of SB per week - one for each weekday. Download them every Monday from Content Depot.
+- We are provided 5 episodes of SB per week - one for each weekday. Download them all together every Monday from Content Depot.
 - Place all 5 files in a local folder (delete last week's files)
 - Each filename contains `SGMT` followed by a number, such as `SGMT03`.
  - `01` is intended for Monday, `02` for Tuesday, and so on.
