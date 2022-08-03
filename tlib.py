@@ -47,14 +47,13 @@ class tlib:
         self.check_if_below = check_if_below
 
     def convert(self, input):
-        '''convert file with ffmpeg and call check length and copy functions'''
+        '''convert file with ffmpeg and proceed'''
         date = datetime.now().strftime("%m%d%y")
         outputFile = (f"{self.showAbbr}-{date}.wav")
         tlib.syslog(self, message=f'{self.show}: Converting to TL format.')
-        subprocess.run(
-            f'ffmpeg -hide_banner -loglevel quiet -i {input} -ar 44100 -ac 1 -af loudnorm=I=-21 -y {outputFile}')
-        tlib.check_length(self, fileToCheck=outputFile)
-        tlib.remove(self, fileToDelete=input)  # call this before removing the files
+        subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i {input} -ar 44100 -ac 1 -af loudnorm=I=-21 -y {outputFile}')
+        tlib.check_length(self, fileToCheck=outputFile) # call this before removing the files
+        tlib.remove(self, fileToDelete=input) 
         tlib.copy(self, fileToCopy=outputFile)
 
 
