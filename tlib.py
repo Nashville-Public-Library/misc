@@ -1,16 +1,11 @@
 '''
-Check RSS feed for today's show. If available, download 
-audio file, convert to TL format, and transfer to destination(s).
-If not available, send notification.
-
-This is for daily shows with a date. EG WSJ-042022.wav
+TL library for processing RSS shows and other segments.
+It's best to read the docs.
 
 © Nashville Public Library
 © Ben Weddle is to blame for this code. Anyone is free to use it.
 '''
 
-from ast import Return
-from copy import error
 import xml.etree.ElementTree as ET
 import subprocess
 from datetime import datetime
@@ -38,22 +33,34 @@ timestamp = datetime.now().strftime('%H:%M:%S on %d %b %Y')
 
 class tlib:
     '''write something here'''
-    def __init__(self, show=None, showAbbr=None, url=None, local_audio=None, check_if_above=0, check_if_below=0):
+    def __init__(self, show=None, showAbbr=None, url=None, is_local=False, local_file=None, remove_source=False, check_if_above=0, check_if_below=0):
         self.show = show
         self.showAbbr = showAbbr
         self.url = url
-        self.local_audio = local_audio
-        self.check_if_above = check_if_above
+        self.is_local = is_local
+        self.local_file = local_file
+        self.remove_source = remove_source
+        self.check_if_above = check_if_above    
         self.check_if_below = check_if_below
 
     def convert(self, input):
         '''convert file with ffmpeg and proceed'''
-        date = datetime.now().strftime("%m%d%y")
-        outputFile = (f"{self.showAbbr}-{date}.wav")
+        if self.url:
+            date = datetime.now().strftime("%m%d%y")
+            outputFile = (f"{self.showAbbr}-{date}.wav")
+        elif self.local_file:
+            outputFile = (f'{self.showAbbr}.wav')
+
         tlib.syslog(self, message=f'{self.show}: Converting to TL format.')
+
         subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i {input} -ar 44100 -ac 1 -af loudnorm=I=-21 -y {outputFile}')
-        tlib.check_length(self, fileToCheck=outputFile) # call this before removing the files
-        tlib.remove(self, fileToDelete=input) 
+        if self.check_if_below > 0:
+            tlib.check_length(self, fileToCheck=outputFile) # call this before removing the files
+        if self.url:
+            tlib.remove(self, fileToDelete=input)
+        elif self.local_file:
+            if self.remove_source == True:
+                tlib.remove(self, fileToDelete=input)
         tlib.copy(self, fileToCopy=outputFile)
 
 
@@ -71,7 +78,7 @@ class tlib:
 
     def remove(self, fileToDelete):
         '''TODO explain'''
-        tlib.syslog(self, message=f'{self.show}: Deleting {fileToDelete} from current directory...')
+        tlib.syslog(self, message=f'{self.show}: Deleting {fileToDelete}')
         os.remove(fileToDelete)  # remove original file from current directory
 
 
@@ -304,18 +311,18 @@ class tlib:
         
         if self.url:
             pass
-        elif self.local_audio:
-            pass
+        elif self.is_local:
+            pass      
         else:
-            raise Exception ('Sorry, you need to specify either a URL or local audio file.')
+            raise Exception ('Sorry, you need to specify either a URL or local audio file. \
+Did you set is_local to True?')
         
-        if self.url and self.local_audio:
+        if self.url and self.is_local:
             raise Exception ('Sorry, you cannot specify both a URL and a local audio file. You must choose only one.')
 
         if self.check_if_above == 0 or self.check_if_below == 0:
             print()
-            print('(You did not specify check_if_below and/or check_if_above. This will probably trigger notifications.) \
-you may need to re-read the documentation')
+            print('(You did not specify check_if_below and/or check_if_above. These tests will not be run.')
 
         if self.url:
             if tlib.check_feed_loop(self) == True:
@@ -332,9 +339,18 @@ you may need to re-read the documentation')
                 print()
                 input('(press enter to close this window)')  # force user to acknowledge
         
-        if self.local_audio:
-            pass
-            #start work on this
+        if self.local_file != None:
+            tlib.check_downloaded_file(self, fileToCheck=self.local_file)
+        else:
+            to_send = (f"There was a problem with {self.show}. \n\n\
+It looks like the source file doesn't exist. \
+Please check manually! Yesterday's file will remain.\n\n\
+{timestamp}")
+            tlib.notify(self, message=to_send, subject='Error')
+            os.system('cls')
+            print(to_send)
+            print()
+            input('(press enter to close this window)') #force user to acknowledge
 
 
 
