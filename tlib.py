@@ -6,6 +6,7 @@ It's best to read the docs.
 © Ben Weddle is to blame for this code. Anyone is free to use it.
 '''
 
+from xml.etree.ElementInclude import include
 import xml.etree.ElementTree as ET
 import subprocess
 from datetime import datetime
@@ -31,37 +32,38 @@ short_day = datetime.now().strftime('%a')
 timestamp = datetime.now().strftime('%H:%M:%S on %d %b %Y')
 
 
-class tlib:
+class tlshow:
     '''write something here'''
-    def __init__(self, show=None, showAbbr=None, url=None, is_local=False, local_file=None, remove_source=False, check_if_above=0, check_if_below=0):
+    def __init__(self, show=None, showFilename=None, url=None, include_date=False, is_local=False, local_file=None, remove_source=False, check_if_above=0, check_if_below=0, notifications=True):
         self.show = show
-        self.showAbbr = showAbbr
+        self.showFilename = showFilename
         self.url = url
+        self.include_date = include_date
         self.is_local = is_local
         self.local_file = local_file
         self.remove_source = remove_source
         self.check_if_above = check_if_above    
         self.check_if_below = check_if_below
+        self.notifications = notifications
 
     def convert(self, input):
         '''convert file with ffmpeg and proceed'''
-        if self.url:
+        if self.include_date:
             date = datetime.now().strftime("%m%d%y")
-            outputFile = (f"{self.showAbbr}-{date}.wav")
-        elif self.local_file:
-            outputFile = (f'{self.showAbbr}.wav')
+            outputFile = (f"{self.showFilename}-{date}.wav")
+        else: 
+            outputFile = (f'{self.showFilename}.wav')
 
-        tlib.syslog(self, message=f'{self.show}: Converting to TL format.')
-
+        tlshow.syslog(self, message=f'{self.show}: Converting to TL format.')
         subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i {input} -ar 44100 -ac 1 -af loudnorm=I=-21 -y {outputFile}')
         if self.check_if_below > 0:
-            tlib.check_length(self, fileToCheck=outputFile) # call this before removing the files
+            tlshow.check_length(self, fileToCheck=outputFile) # call this before removing the files
         if self.url:
-            tlib.remove(self, fileToDelete=input)
+            tlshow.remove(self, fileToDelete=input)
         elif self.local_file:
             if self.remove_source == True:
-                tlib.remove(self, fileToDelete=input)
-        tlib.copy(self, fileToCopy=outputFile)
+                tlshow.remove(self, fileToDelete=input)
+        tlshow.copy(self, fileToCopy=outputFile)
 
 
     def copy(self, fileToCopy):
@@ -69,16 +71,16 @@ class tlib:
         numberOfDestinations = len(destinations)
         numberOfDestinations = numberOfDestinations - 1
         while numberOfDestinations >= 0:
-            tlib.syslog(self, message=f'{self.show}: Copying {fileToCopy} to {destinations[numberOfDestinations]}...')
+            tlshow.syslog(self, message=f'{self.show}: Copying {fileToCopy} to {destinations[numberOfDestinations]}...')
             shutil.copy(fileToCopy, destinations[numberOfDestinations])
             numberOfDestinations = numberOfDestinations-1
-        tlib.remove(self, fileToDelete=fileToCopy)
-        tlib.check_file_transferred(self, fileToCheck=fileToCopy)
+        tlshow.remove(self, fileToDelete=fileToCopy)
+        tlshow.check_file_transferred(self, fileToCheck=fileToCopy)
 
 
     def remove(self, fileToDelete):
         '''TODO explain'''
-        tlib.syslog(self, message=f'{self.show}: Deleting {fileToDelete}')
+        tlshow.syslog(self, message=f'{self.show}: Deleting {fileToDelete}')
         os.remove(fileToDelete)  # remove original file from current directory
 
 
@@ -91,25 +93,25 @@ class tlib:
 
         while numberOfDestinations >= 0:
             globbify = glob.glob(
-                f'{destinations[numberOfDestinations]}\{self.showAbbr}*.wav')
+                f'{destinations[numberOfDestinations]}\{self.showFilename}*.wav')
             globbifyLength = len(globbify) - 1
             if globbifyLength >= 0:
-                tlib.syslog(self, message=f'{self.show}: Deleting {globbify[globbifyLength]}')
+                tlshow.syslog(self, message=f'{self.show}: Deleting {globbify[globbifyLength]}')
                 os.remove(f'{globbify[globbifyLength]}')
             else:
-                tlib.syslog(self, message=f"{self.show}: Cannot find yesterday's files. Continuing...")
+                tlshow.syslog(self, message=f"{self.show}: Cannot find yesterday's files. Continuing...")
             numberOfDestinations = numberOfDestinations - 1
             globbifyLength = globbifyLength - 1
 
 
     def download_file(self):
         '''download audio file from rss feed'''
-        download = tlib.get_audio_url(self)
-        tlib.syslog(self, message=f'{self.show}: Attempting to download audio file.')
+        download = tlshow.get_audio_url(self)
+        tlshow.syslog(self, message=f'{self.show}: Attempting to download audio file.')
         input_file = 'input.mp3'  # name the file we download
         # using wget because urlretrive is getting a 403 denied error
         subprocess.run(f'wget -q -O {input_file} {download}')
-        tlib.check_downloaded_file(self, fileToCheck=input_file)
+        tlshow.check_downloaded_file(self, fileToCheck=input_file)
 
 
     def check_downloaded_file(self, fileToCheck):
@@ -119,13 +121,13 @@ class tlib:
         i = 0
         while i < 3:
             if filesize > 0:
-                tlib.syslog(self, message=f'{self.show} is not empty. Continuing...')
-                tlib.convert(self, input=fileToCheck)
+                tlshow.syslog(self, message=f'{self.show} is not empty. Continuing...')
+                tlshow.convert(self, input=fileToCheck)
                 is_not_empty = True
                 break
             else:
-                tlib.syslog(self, message=f'{self.show} is empty. Will download again. Attempt # {i}.')
-                tlib.download_file(self)
+                tlshow.syslog(self, message=f'{self.show} is empty. Will download again. Attempt # {i}.')
+                tlshow.download_file(self)
                 i = i+1
         if is_not_empty == True:
             pass
@@ -134,7 +136,7 @@ class tlib:
     It looks like the downloaded file is empty. Please check manually! \
     Yesterday's file will remain. \n\n\
     {timestamp}")
-            tlib.notify(self, message=toSend, subject='Error')
+            tlshow.notify(self, message=toSend, subject='Error')
 
 
     def syslog(self, message):
@@ -184,14 +186,17 @@ class tlib:
 
     def notify(self, message, subject):
         '''TODO: explain'''
-        weekend = ['Sat', 'Sun']
-        if short_day in weekend:
-            tlib.send_sms(self, message=message)
-            tlib.send_mail(self, message=message, subject=subject)
-            tlib.syslog(self, message=message)
+        if self.notifications:
+            weekend = ['Sat', 'Sun']
+            if short_day in weekend:
+                tlshow.send_sms(self, message=message)
+                tlshow.send_mail(self, message=message, subject=subject)
+                tlshow.syslog(self, message=message)
+            else:
+                tlshow.send_mail(self, message=message, subject=subject)
+                tlshow.syslog(self, message=message)
         else:
-            tlib.send_mail(self, message=message, subject=subject)
-            tlib.syslog(self, message=message)
+            pass
 
 
     def check_file_transferred(self, fileToCheck):
@@ -203,14 +208,14 @@ class tlib:
                 os.path.isfile(
                     f'{destinations[numberOfDestinations]}\{fileToCheck}')
                 numberOfDestinations = numberOfDestinations-1
-                tlib.syslog(self, message=f'{self.show}: {fileToCheck} arrived at {destinations[numberOfDestinations]}')
-            tlib.countdown(self)
+                tlshow.syslog(self, message=f'{self.show}: {fileToCheck} arrived at {destinations[numberOfDestinations]}')
+            tlshow.countdown(self)
         except:
             toSend = (f"There was a problem with {self.show}.\n\n\
     It looks like the file either wasn't converted or didn't transfer correctly. \
     Please check manually! \n\n\
         {timestamp}")
-            tlib.notify(self, message=toSend, subject='Error')
+            tlshow.notify(self, message=toSend, subject='Error')
             os.system('cls')
             print(toSend)  # get user's attention!
             print()
@@ -229,14 +234,14 @@ class tlib:
             toSend = (f"Today's {self.show} is {duration} minutes long! \
     Please check manually and make edits to bring it below {self.check_if_above} minutes.\n\n\
     {timestamp}")
-            tlib.notify(self, message=toSend, subject='Check Length')
+            tlshow.notify(self, message=toSend, subject='Check Length')
         elif duration < self.check_if_below:
             toSend = (f"Today's {self.show} is only {duration} minutes long! \
     This is unusual and could indicate a problem with the file. Please check manually!\n\n\
     {timestamp}")
-            tlib.notify(self, message=toSend, subject='Check Length')
+            tlshow.notify(self, message=toSend, subject='Check Length')
         else:
-            tlib.syslog(self, message=f'{self.show}: File is {duration} minute(s). Continuing...')
+            tlshow.syslog(self, message=f'{self.show}: File is {duration} minute(s). Continuing...')
 
 
     def get_feed(self):
@@ -250,23 +255,23 @@ class tlib:
 
     def check_feed_updated(self):
         '''TODO explain'''
-        root = tlib.get_feed(self)
+        root = tlshow.get_feed(self)
         for t in root.findall('channel'):
             item = t.find('item')  # 'find' only returns the first match!
             pub_date = item.find('pubDate').text
             if short_day in pub_date:
-                tlib.syslog(self, message=f'{self.show}: The feed is updated. Continuing...')
+                tlshow.syslog(self, message=f'{self.show}: The feed is updated. Continuing...')
                 return True
 
 
     def get_audio_url(self):
         '''TODO: explain'''
-        root = tlib.get_feed(self)
+        root = tlshow.get_feed(self)
         for t in root.findall('channel'):
             item = t.find('item')  # 'find' only returns the first match!
             audio_url = item.find('enclosure').attrib
             audio_url = audio_url.get('url')
-            tlib.syslog(self, message=f'{self.show}: Audio URL is: {audio_url}')
+            tlshow.syslog(self, message=f'{self.show}: Audio URL is: {audio_url}')
             return audio_url
 
 
@@ -275,8 +280,8 @@ class tlib:
         It's being cached, or something...? So we are checking it 3 times, for good measure.'''
         i = 0
         while i < 3:
-            tlib.syslog(self, message=f'{self.show}: Attempt {i} to check feed.')
-            feed_updated = tlib.check_feed_updated(self)
+            tlshow.syslog(self, message=f'{self.show}: Attempt {i} to check feed.')
+            feed_updated = tlshow.check_feed_updated(self)
             if feed_updated == True:
                 return feed_updated
             else:
@@ -287,7 +292,7 @@ class tlib:
     def countdown(self):
         os.system('cls')
         toSend = f'{self.show}: All Done.'
-        tlib.syslog(self, message=toSend)
+        tlshow.syslog(self, message=toSend)
         print(toSend)
         print()
         number = 5
@@ -302,76 +307,77 @@ class tlib:
         '''Begins to process the file'''
         
         print((f"I'm working on {self.show}. Just a moment..."))
-        tlib.syslog(self, message=f'{self.show}: Starting script')
+        tlshow.syslog(self, message=f'{self.show}: Starting script')
 
         if not self.show:
             raise Exception ('Sorry, you need to specify a show name.')
-        if not self.showAbbr:
+
+        if not self.showFilename:
             raise Exception ('Sorry, you need to specify a show abbreviation name.')
-        
-        if self.url:
-            pass
-        elif self.is_local:
-            pass      
-        else:
-            raise Exception ('Sorry, you need to specify either a URL or local audio file. \
-Did you set is_local to True?')
-        
+
         if self.url and self.is_local:
             raise Exception ('Sorry, you cannot specify both a URL and a local audio file. You must choose only one.')
 
         if self.check_if_above == 0 or self.check_if_below == 0:
             print()
             print('(You did not specify check_if_below and/or check_if_above. These tests will not be run.')
-
+        
         if self.url:
-            if tlib.check_feed_loop(self) == True:
-                tlib.removeYesterdayFiles(self)
-                tlib.download_file(self)
+            if tlshow.check_feed_loop(self) == True:
+                tlshow.removeYesterdayFiles(self)
+                tlshow.download_file(self)
             else:
                 toSend = (f"There was a problem with {self.show}. \n\n\
     It looks like today's file hasn't yet been posted. \
     Please check and download manually! Yesterday's file will remain.\n\n\
     {timestamp}")
-                tlib.notify(self, message=toSend, subject='Error')
+                tlshow.notify(self, message=toSend, subject='Error')
                 os.system('cls')
                 print(toSend)
                 print()
                 input('(press enter to close this window)')  # force user to acknowledge
-        
-        if self.local_file != None:
-            tlib.check_downloaded_file(self, fileToCheck=self.local_file)
+        elif self.is_local:
+            if self.local_file:
+                tlshow.check_downloaded_file(self, fileToCheck=self.local_file)
+            else:
+                to_send = (f"There was a problem with {self.show}. \n\n\
+    It looks like the source file doesn't exist. \
+    Please check manually! Yesterday's file will remain.\n\n\
+    {timestamp}")
+                tlshow.notify(self, message=to_send, subject='Error')
+                os.system('cls')
+                print(to_send)
+                print()
+                input('(press enter to close this window)') #force user to acknowledge      
         else:
-            to_send = (f"There was a problem with {self.show}. \n\n\
-It looks like the source file doesn't exist. \
-Please check manually! Yesterday's file will remain.\n\n\
-{timestamp}")
-            tlib.notify(self, message=to_send, subject='Error')
-            os.system('cls')
-            print(to_send)
-            print()
-            input('(press enter to close this window)') #force user to acknowledge
-
-
-
-
-
-# class testing:
-#     def __init__(self, num=None, url=None, lift=None):
-#         self.num = num
-#         self.url = url
-#         self.lift = lift
+            raise Exception ('Sorry, you need to specify either a URL or local audio file. \
+Did you set is_local to True?')
         
-#     def adding(self):
-#         '''pass an integer'''
-#         if self.lift and self.num:
-#             return error ('sorry, we can only take one or the other')
-    
-#         if type(self.num) == int and type(self.url) == str:
-#             print(f'your URL is: {self.url}')
-#             print (self.num + 10)
-#             if self.lift:
-#                 print(self.lift)
 
+#         if self.url:
+#             if tlshow.check_feed_loop(self) == True:
+#                 tlshow.removeYesterdayFiles(self)
+#                 tlshow.download_file(self)
+#             else:
+#                 toSend = (f"There was a problem with {self.show}. \n\n\
+#     It looks like today's file hasn't yet been posted. \
+#     Please check and download manually! Yesterday's file will remain.\n\n\
+#     {timestamp}")
+#                 tlshow.notify(self, message=toSend, subject='Error')
+#                 os.system('cls')
+#                 print(toSend)
+#                 print()
+#                 input('(press enter to close this window)')  # force user to acknowledge
+        
+#         if self.is_local and self.local_file != None:
+#             tlshow.check_downloaded_file(self, fileToCheck=self.local_file)
 #         else:
-#             print (f'{self.num} should be a number')
+#             to_send = (f"There was a problem with {self.show}. \n\n\
+# It looks like the source file doesn't exist. \
+# Please check manually! Yesterday's file will remain.\n\n\
+# {timestamp}")
+#             tlshow.notify(self, message=to_send, subject='Error')
+#             os.system('cls')
+#             print(to_send)
+#             print()
+#             input('(press enter to close this window)') #force user to acknowledge
