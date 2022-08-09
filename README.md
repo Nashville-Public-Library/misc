@@ -1,30 +1,8 @@
 # MISC 
 
-### This repo contains Python scripts to automate MISC tasks at the TL.
+## MISC TL Python scripts
 
-For *all* these scripts, you must have Python 3.10.1+ AND Windows binaries for [FFmpeg](https://www.ffmpeg.org) **AND** FFprobe installed on the PC and added to the PATH.
-
-Some scripts also use Twilio for notifications. There is a Twilio library for Python. It is not in the Python standard library and needs to be installed via PIP (`pip install twilio`). Store the Twilio credentials in environment variables on the PCs. The alternative is to use `curl` with long, complicated URLs.
-
-### In fact, a number of variables used in these scripts are stored in environment variables. For example:
-- syslog server
-- mail server
-- Twilio "to" and "from" numbers
-- And more. Make sure to check all of them.
-
-
-### We run most of these scripts via WireReady (WR)
-- The "Run" command in WR defaults to running from a different directory AND a different drive letter. This causes confusion.
-- WR also does not run `.py` files by default. 
-- For these reasons and more, we do not run `.py` files directly from WR.
-- Instead, we tell WR to run a Batch script (`.bat` file) which in turn will run the Python script (`.py` file). 
-- The batch script ensures we CD to the correct directory.
-- Ensure the Batch & Python scripts are in the same directory.
-- A sample `.bat` file (`Example.bat`) is inlcuded in this repo.
-
-As a general note: It's best to avoid spaces in your audio filenames. If your audio filenames have spaces in them, the FFmpeg commands will need to be changed.
-
-### The scripts should be fairly straightfoward and self-explanatory but below are some general notes.
+Animal Airwaves, Bird Note, and Sound Beat are all shows wyhose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
 
 ---
 
@@ -62,6 +40,9 @@ TL script to process Sound Beat (SB) each weekday.
  - `01` is intended for Monday, `02` for Tuesday, and so on.
  - This script matches the day of the week to a specific filename, then processes that file.
 
+---
+---
+## Other Misc
 ---
 
 ## wav.py
