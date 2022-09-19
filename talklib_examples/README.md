@@ -3,7 +3,7 @@
 
 Animal Airwaves, Bird Note, and Sound Beat are all shows wyhose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
 
----
+----
 
 ## AnimalAir.py
 
@@ -20,7 +20,7 @@ TL script to process Animal Airwaves (AA) each day.
     - *(An improvement to this script would be to check whether the file exists and, if not, create it for you)*
 - Note that the original source files are *not* deleted when the script runs. This is because we re-air them throughout the month.
 
------
+----
 ## BirdNote.py
 
 TL script to process Bird Note (BN) each weekday.
@@ -29,7 +29,7 @@ TL script to process Bird Note (BN) each weekday.
 - Each filename contains `SGMT` followed by a number, such as `SGMT05`.
  - `01` is intended for Wednesday, `02` for Thursday, ... and `07` is for Tuesday.
  - This script matches the day of the week to a specific filename, then processes that file.
------
+----
 ## SoundBeat.py
 
 TL script to process Sound Beat (SB) each weekday.
@@ -39,7 +39,7 @@ TL script to process Sound Beat (SB) each weekday.
  - `01` is intended for Monday, `02` for Tuesday, and so on.
  - This script matches the day of the week to a specific filename, then processes that file.
 
----
+----
 © Nashville Public Library
 
 © Ben Weddle is to blame for this code. Anyone is free to use it.
