@@ -1,0 +1,34 @@
+<!--
+Fetch "Now Playing" metadata from TL Icecast server.
+This is an example of the script outputing to html
+© Nashville Public Library
+© Ben Weddle is to blame for this code. Anyone is free to use it.
+-->
+<!DOCTYPE html>
+<html>
+<body>
+
+<!-- *****this styling is just for testing so we don't have to bring external CSS into the mix!***** -->
+<p style = 'font-size: 150%; display: inline;'>Now Playing:</p> 
+<p style = 'font-size: 150%; border: 2px solid black; border-radius: 5px; padding: 5px; margin: 5px; display: inline;' id="print_title"></p>
+
+<script>
+    function nowplaying() {
+
+    fetch('http://npl.streamguys1.com/status.xsl') //http is much faster than https
+    .then(response => response.text())
+    .then(function(html) {
+        var dom = new DOMParser();
+        var parse = dom.parseFromString(html, "text/html"); 
+        var index = 21; //index of 'current song'
+        var result = parse.querySelectorAll('td')[index].textContent;
+        
+        document.getElementById('print_title').innerHTML = result //output to matching html tag
+    })
+}
+nowplaying()
+setInterval(nowplaying, 30000) //1000 = 1 second
+</script>
+
+</body>
+</html>
