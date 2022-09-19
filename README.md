@@ -1,54 +1,22 @@
 # MISC 
 
-## MISC TL Python scripts
+each of the folders referenced below have their own README files.
 
-Animal Airwaves, Bird Note, and Sound Beat are all shows wyhose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
+## talklib_examples
+
+Example scripts which call the `talklib` module. These are mostly "local" shows which use short algorithms to determine the path to the source file.
+
+---
+
+## now_playing
+
+various methods of fetching the TL's "Now Playing" metadata.
 
 ---
 
-## AnimalAir.py
+## utilities
 
-TL script to process Animal Airwaves (AA) each day.
-- We are provided 12 episodes of AA per month. Download them all together at the beginning of each month from Content Depot.
-- Place all 12 files in the local folder listed in the script (delete last month's files).
-- Since there are only 12 episodes, but we need to air it every day, we will usually need to air each episode more than once.
-- The script will randomize which episode is used each day and also ensure the same episode never airs two days in a row.
-- Make sure there is a  `yesterday.txt` file that: 
-    - exists
-    - is in the same directory as the `.py` file
-    - contains one number between between 1 and 12 and **does not contain anything else**
-    - after this set up you will not need to edit or do anything with this file. I inlcude this here so you know you *must* have this file for the script to run. 
-    - *(An improvement to this script would be to check whether the file exists and, if not, create it for you)*
-- Note that the original source files are *not* deleted when the script runs. This is because we re-air them throughout the month.
-
------
-## BirdNote.py
-
-TL script to process Bird Note (BN) each weekday.
-- We are provided 7 episodes of BN per week - one for each day of the week. Download them all together every Wednesday from Content Depot.
-- Place all 7 files in the local folder listed in the script. There should not be any files remaining in the folder on Wednesday, but if there are, delete them.
-- Each filename contains `SGMT` followed by a number, such as `SGMT05`.
- - `01` is intended for Wednesday, `02` for Thursday, ... and `07` is for Tuesday.
- - This script matches the day of the week to a specific filename, then processes that file.
------
-## SoundBeat.py
-
-TL script to process Sound Beat (SB) each weekday.
-- We are provided 5 episodes of SB per week - one for each weekday. Download them all together every Monday from Content Depot.
-- Place all 5 files in the local folder listed in the script. There should not be any files remaining in the SB folder on Monday, but if there are, delete them.
-- Each filename contains `SGMT` followed by a number, such as `SGMT03`.
- - `01` is intended for Monday, `02` for Tuesday, and so on.
- - This script matches the day of the week to a specific filename, then processes that file.
-
----
----
-## Other Misc
----
-
-## wav.py
-TL script to convert audio files of various types to TL broadcast format: mono, 44.1kHz, 16 bit wav files (PCM s16le).
-- can be used to convert files from Content Depot
-- works fine but needs improvement
+currently just our converting script.
 
 ---
 © Nashville Public Library

@@ -21,3 +21,8 @@ ReturnOne.php returns only "Current Song".
 NowPlaying-ET.py uses ElementTree, but credentials are required to access the raw xml.
 
 NowPlaying-LXML.py uses lxml (and xpath). No credentials are needed.
+
+---
+© Nashville Public Library
+
+© Ben Weddle is to blame for this code. Anyone is free to use it.
