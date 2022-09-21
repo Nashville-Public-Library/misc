@@ -1,7 +1,7 @@
 # talklib_examples 
 ## Using the talklib module
 
-Animal Airwaves, Bird Note, and Sound Beat are all shows wyhose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
+Animal Airwaves, Bird Note, and Sound Beat are all shows whose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
 
 ----
 
