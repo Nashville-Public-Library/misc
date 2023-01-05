@@ -4,6 +4,8 @@ TL script to convert audio files of various types to TL broadcast format: mono, 
 - can be used to convert files from Content Depot
 - works fine but needs improvement
 
+You MUST have FFmpeg installed and added to the PATH.
+
 ---
 © Nashville Public Library
 
