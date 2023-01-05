@@ -8,17 +8,19 @@ parser.add_argument('--title', type=str, required=True)
 args = parser.parse_args()
 title = args.title
 
-a = TLShow(show=f'Metadata')
-to_send = f'There was a problem sending metadata for {title}'
+object_for_notifications = TLShow(show=f'Metadata')
+
+error_message = f'There was a problem sending metadata for {title}'
+success_message = f' "{title}" sent to encoder'
 
 try:
     subprocess.run(f'echo t={title} | ncat %Telos%', shell=True, timeout=5)
-    a.syslog(message=f' {title} sent to encoder')
+    object_for_notifications.syslog(message=success_message)
 except:
-    a.notify(message=to_send, subject='Error')
+    object_for_notifications.notify(message=error_message, subject='Error')
 
 try:
     subprocess.run(f'echo {title} | ncat -u %BrightSign%', shell=True, timeout=5)
-    a.syslog(message=f' {title} sent to BrightSign')
-except Exception as b:
-    a.notify(message=to_send, subject='Error')
+    object_for_notifications.syslog(message=success_message)
+except:
+    object_for_notifications.notify(message=error_message, subject='Error')
