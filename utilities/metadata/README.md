@@ -4,6 +4,10 @@ TL script to send "Now Playing" metadata to Icecast and elsewhere.
 
 ...write this later...
 
+### Dependencies
+ - ncat
+ - The TL's 'talklib' module
+
 ---
 © Nashville Public Library
 
