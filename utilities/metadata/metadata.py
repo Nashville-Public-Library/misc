@@ -1,3 +1,12 @@
+'''
+Send metadata to Icecast and wherever else you need it.
+I haven't yet figured out how to get this to work with Python's socket library,
+so we're using ncat.
+
+Just call up this script from the command line or a bash/batch script and pass
+in the command line argument.
+'''
+
 import subprocess
 import argparse
 
@@ -10,7 +19,7 @@ title = args.title
 
 object_for_notifications = TLShow(show=f'Metadata')
 
-error_message = f'There was a problem sending metadata for {title}'
+error_message = f'There was a problem sending metadata for "{title}"'
 success_message = f' "{title}" sent to encoder'
 
 # send message to Telos unit
