@@ -4,6 +4,8 @@
 
 :: turn echo off
 @echo off
+echo Sending metadata...
+echo.
 
 :: change to current directory (directory of batch file)
 CD /d "%~dp0"
