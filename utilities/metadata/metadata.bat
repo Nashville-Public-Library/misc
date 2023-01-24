@@ -11,4 +11,4 @@ echo.
 CD /d "%~dp0"
 
 :: run python script with command line argument
-py %CD%\metadata.py --title "Name of Some Program"
+py %CD%\metadata.py --title "Name of some TL Show"
