@@ -24,21 +24,25 @@ error_message = f'There was a problem sending metadata for "{title}".'
 success_message = f' "{title}" sent to encoder'
 
 # send message to Telos unit
+
+process = subprocess.Popen(f'echo t={title} | ncat 10.28.30.129 9000', shell=True)
+send_syslog.syslog(message=success_message)
+
 try:
-    send = subprocess.Popen(f'echo t={title} | ncat 10.28.30.129 9000', shell=True)
-    send_syslog.syslog(message=success_message)
-    time.sleep(4)
-    send.kill()
-except Exception as asdf:
-    error_message = error_message + 'Here is the error: ' + asdf
+    outs, errs = process.communicate(timeout=15)
+except:
+    process.kill()
+    process.communicate()
     send_syslog.notify(message=error_message, subject='Error')
 
+# BrightSign
+
+process2 = subprocess.Popen(f'echo {title} | ncat -u 10.28.30.212 5000', shell=True,)
+send_syslog.syslog(message=success_message)
 
 try:
-    send = subprocess.Popen(f'echo {title} | ncat -u 10.28.30.212 5000', shell=True,)
-    send_syslog.syslog(message=success_message)
-    time.sleep(4)
-    send.kill()
-except Exception as asdf:
-    error_message = error_message + 'Here is the error: ' + asdf
+    outs, errs = process2.communicate(timeout=15)
+except:
+    process2.kill()
+    process2.communicate()
     send_syslog.notify(message=error_message, subject='Error')
