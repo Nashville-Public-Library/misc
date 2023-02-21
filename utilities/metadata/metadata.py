@@ -29,7 +29,7 @@ process = subprocess.Popen(f'echo t={title} | ncat 10.28.30.129 9000', shell=Tru
 send_syslog.syslog(message=success_message)
 
 try:
-    outs, errs = process.communicate(timeout=15)
+    outs, errs = process.communicate(timeout=10)
 except:
     process.kill()
     process.communicate()
@@ -40,8 +40,10 @@ except:
 process2 = subprocess.Popen(f'echo {title} | ncat -u 10.28.30.212 5000', shell=True,)
 send_syslog.syslog(message=success_message)
 
+time.sleep(2)
+
 try:
-    outs, errs = process2.communicate(timeout=15)
+    outs, errs = process2.communicate(timeout=10)
 except:
     process2.kill()
     process2.communicate()
