@@ -4,11 +4,10 @@
 
 :: turn echo off
 @echo off
-echo Sending metadata...
-echo.
 
 :: change to current directory (directory of batch file)
 CD /d "%~dp0"
 
 :: run python script with command line argument
+:: change "name of some TL Show" to the name of the show.
 py %CD%\metadata.py --title "Name of some TL Show"

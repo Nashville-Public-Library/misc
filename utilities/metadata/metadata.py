@@ -1,10 +1,13 @@
 '''
 Send metadata to Icecast and wherever else you need it.
-I haven't yet figured out how to get this to work with Python's socket library,
-so we're using ncat.
-Just call up this script from the command line or a bash/batch script and pass
+Currently, this is sending to the TL Telos encoder unit,
+AND to the BrightSign unit.
+TCP is for Telos, UDP is for BrightSign.
+
+Just call up this script from the command line or a batch script and pass
 in the command line argument.
 '''
+
 import argparse
 import socket
 
@@ -18,6 +21,8 @@ title = args.title
 send_syslog = TLShow(show=f'Metadata')
 
 error_message = f'There was a problem sending metadata for "{title}".'
+
+print(f'Metadata: sending "{title}" ...')
 
 # Telos
 try:
