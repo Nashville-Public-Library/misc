@@ -9,7 +9,10 @@ in the command line argument.
 '''
 
 import argparse
+import os
 import socket
+
+import requests
 
 from talklib.show import TLShow
 
@@ -25,30 +28,24 @@ error_message = f'There was a problem sending metadata for "{title}".'
 print(f'Metadata: sending "{title}" ...')
 
 # Telos
-try:
-    host = '10.28.30.129'
-    port = 9000
 
-    to_send = f'<song title="{title}" url="..."></song>'
-    to_send = to_send.encode()
+user = os.environ['icecast_user']
+password = os.environ['icecast_pass']
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((host, port))
-    sock.sendall(to_send)
-    sock.close()
-    send_syslog.syslog(message=f'{title} sent to Telos')
-except Exception as asdf:
-    send_syslog.syslog(message=error_message)
-    print(asdf)
-    input()
+url = f'http://npl.streamguys1.com:80/admin/metadata?mount=/live&mode=updinfo&song={title}'
+
+send = requests.get(url, auth = (user, password))
+
+print(send.status_code)
 
 
 # BrightSign 
-try:
-    to_send_UDP = title.encode()
-    serverAddressPort   = ("10.28.30.212", 5000)
-    UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-    UDPClientSocket.sendto(to_send_UDP, serverAddressPort)
-    send_syslog.syslog(message=f'{title} sent to BrightSign')
-except:
-    send_syslog.syslog(message=error_message)
+
+# try:
+#     to_send_UDP = title.encode()
+#     serverAddressPort   = ("10.28.30.212", 5000)
+#     UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+#     UDPClientSocket.sendto(to_send_UDP, serverAddressPort)
+#     send_syslog.syslog(message=f'{title} sent to BrightSign')
+# except:
+#     send_syslog.syslog(message=error_message)
