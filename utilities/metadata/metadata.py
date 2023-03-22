@@ -37,8 +37,10 @@ try:
     sock.sendall(to_send)
     sock.close()
     send_syslog.syslog(message=f'{title} sent to Telos')
-except:
+except Exception as asdf:
     send_syslog.syslog(message=error_message)
+    print(asdf)
+    input()
 
 
 # BrightSign 
