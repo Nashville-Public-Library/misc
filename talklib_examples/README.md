@@ -29,6 +29,17 @@ TL script to process Bird Note (BN) each weekday.
 - Each filename contains `SGMT` followed by a number, such as `SGMT05`.
  - `01` is intended for Wednesday, `02` for Thursday, ... and `07` is for Tuesday.
  - This script matches the day of the week to a specific filename, then processes that file.
+
+----
+## HealthHeart.py
+
+TL script to process Health in a Heartbeat (HH) each weekday.
+- We are provided one episode for each weekday of the month. Download them all together on the first weekday of the month from Content Depot.
+- Place all files in the local folder listed in the script. There should not be any files remaining in the HH folder at the beginning of the month, but if there are, delete them first.
+- Each filename contains `SGMT` followed by a number, such as `SGMT03`.
+    - IMPORTANT: The first file, labelled with `SGMT01`, is an empty audio file. Delete it!
+    - The first file should be `SGMT02`.
+- This script will look at all the files in this folder and pick the file with the lowest SGMT number to use.
 ----
 ## SoundBeat.py
 
