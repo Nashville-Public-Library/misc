@@ -1,7 +1,7 @@
 # talklib_examples 
 ## Using the talklib module
 
-Animal Airwaves, Bird Note, and Sound Beat are all shows whose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
+Animal Airwaves, Bird Note, Health in a Heartbeat, and Sound Beat are all shows whose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
 
 ----
 
@@ -35,9 +35,10 @@ TL script to process Bird Note (BN) each weekday.
 
 TL script to process Health in a Heartbeat (HH) each weekday.
 - We are provided one episode for each weekday of the month. Download them all together on the first weekday of the month from Content Depot.
-- Place all files in the local folder listed in the script. There should not be any files remaining in the HH folder at the beginning of the month, but if there are, delete them first.
+- Place all files in the local folder listed in the script.     
+    - There should not be any files from the previous month remaining in the HH folder, but if there are, delete them first.
 - Each filename contains `SGMT` followed by a number, such as `SGMT03`.
-    - IMPORTANT: The first file, labelled with `SGMT01`, is an empty audio file. Delete it!
+    - IMPORTANT: The first file, labelled with `SGMT01`, is always an empty audio file. Delete it!
     - The first file should be `SGMT02`.
 - This script will look at all the files in this folder and pick the file with the lowest SGMT number to use.
 ----
