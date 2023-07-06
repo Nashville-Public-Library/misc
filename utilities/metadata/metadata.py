@@ -15,6 +15,7 @@ import socket
 import requests
 
 from talklib.show import TLShow
+from talklib.utils import send_syslog
 
 meta = TLShow(show=f'Metadata')
 
@@ -26,7 +27,7 @@ def get_title():
     return title
 
 def send_to_icecast(title):
-    meta.syslog(message=f'attempting to send "{title}" to Icecast')
+    send_syslog(message=f'attempting to send "{title}" to Icecast')
     user = os.environ['icecast_user']
     password = os.environ['icecast_pass']
     url = f'https://npl.streamguys1.com:80/admin/metadata?mount=/live&mode=updinfo&song={title}'
@@ -37,17 +38,17 @@ def send_to_icecast(title):
             message=f'There was a problem sending metadata to Icecast. The response code was: {send.status_code}'
             )
     else:
-        meta.syslog(message=f'Successfully sent "{title}" to Icecast')
+        send_syslog(message=f'Successfully sent "{title}" to Icecast')
 
 
 def send_to_BrightSign(title):
     try:
-        meta.syslog(message=f'attempting to send "{title}" to BrightSign"')
+        send_syslog(message=f'attempting to send "{title}" to BrightSign"')
         to_send_UDP = title.encode()
         serverAddressPort   = ("10.28.30.212", 5000)
         UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         UDPClientSocket.sendto(to_send_UDP, serverAddressPort)
-        meta.syslog(message=f'"Successfully sent {title}" to BrightSign')
+        send_syslog(message=f'"Successfully sent {title}" to BrightSign')
     except:
         meta.notify(subject='Error', message=f'There was a problem sending the title to the BrightSign unit')
 
