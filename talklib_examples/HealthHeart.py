@@ -5,8 +5,12 @@ from talklib.utils import today_is_weekday
 
 def get_file():
     folder = 'D:\Production\shows\HealthHeart'
-    audio_file = glob.glob(f'{folder}\*.wav')
-    audio_file = audio_file[0] # just grab the first one. they're all labelled with ascending numbers.
+    try:
+        audio_file = glob.glob(f'{folder}\*.wav')
+        audio_file = audio_file[0]
+    except:
+        audio_file = None
+    
     return audio_file
 
 
