@@ -24,7 +24,7 @@ def main():
     HH.remove_source = True
     HH.check_if_above = 2.1
     HH.check_if_below = 1.9
-    HH.ff_level = 18
+    HH.ffmpeg.compression_level = 18
     HH.run()
 
 if today_is_weekday():

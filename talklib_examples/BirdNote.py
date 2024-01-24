@@ -2,14 +2,9 @@ from talklib.show import TLShow
 from datetime import datetime
 import glob
 
-show = 'Bird Note' # for notifications
-output_file = 'Tenn-BirdNote.wav' #name of file with .wav extension
-folder = (r'C:\Users\wrprod\Desktop\BirdNote') #path to source files
 
-#TODO: explain what this is doing!
 def matchName():
-    global source_exists
-    source_exists = False
+    '''TODO: explain what this is doing!'''
     dict = {
     'Wed': 'SGMT01',
     'Thu': 'SGMT02',
