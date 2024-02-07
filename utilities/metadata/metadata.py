@@ -15,9 +15,10 @@ import socket
 import requests
 
 from talklib.show import TLShow
-from talklib.utils import send_syslog
+from talklib import Syslog
 
-meta = TLShow(show=f'Metadata')
+meta = TLShow()
+meta.show = 'Metadata'
 
 def get_title():
     parser = argparse.ArgumentParser()
@@ -27,30 +28,32 @@ def get_title():
     return title
 
 def send_to_icecast(title):
-    send_syslog(message=f'attempting to send "{title}" to Icecast')
+    sys = Syslog()
+    sys.send_syslog_message(message=f'attempting to send "{title}" to Icecast')
     user = os.environ['icecast_user']
     password = os.environ['icecast_pass']
     url = f'https://npl.streamguys1.com:80/admin/metadata?mount=/live&mode=updinfo&song={title}'
     send = requests.get(url, auth = (user, password))
     if send.status_code != 200:
-        meta.notify(
+        meta.send_notifications(
             subject='Error', 
             message=f'There was a problem sending metadata to Icecast. The response code was: {send.status_code}'
             )
     else:
-        send_syslog(message=f'Successfully sent "{title}" to Icecast')
+        sys.send_syslog_message(message=f'Successfully sent "{title}" to Icecast')
 
 
 def send_to_BrightSign(title):
     try:
-        send_syslog(message=f'attempting to send "{title}" to BrightSign"')
+        sys = Syslog()
+        sys.send_syslog_message(message=f'attempting to send "{title}" to BrightSign"')
         to_send_UDP = title.encode()
         serverAddressPort   = ("10.28.30.212", 5000)
         UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         UDPClientSocket.sendto(to_send_UDP, serverAddressPort)
-        send_syslog(message=f'"Successfully sent {title}" to BrightSign')
+        sys.send_syslog_message(message=f'"Successfully sent {title}" to BrightSign')
     except:
-        meta.notify(subject='Error', message=f'There was a problem sending the title to the BrightSign unit')
+        meta.send_notifications(subject='Error', message=f'There was a problem sending the title to the BrightSign unit')
 
 
 def main():
