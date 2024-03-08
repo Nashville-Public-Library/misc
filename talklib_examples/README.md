@@ -52,6 +52,10 @@ TL script to process Sound Beat (SB) each weekday.
  - This script matches the day of the week to a specific filename, then processes that file.
 
 ----
+## Example.bat
+- Sample `.bat` file to be used alongside a Python script that uses the [talklib package](https://github.com/talkinglibrary/talklib).
+- Download a copy of this file, place it inside the same folder as your Python script, rename it to match the name of your Python Script, and schedule it to run in WireReady.
+-----
 © Nashville Public Library
 
 © Ben Weddle is to blame for this code. Anyone is free to use it.
