@@ -6,7 +6,7 @@ To change things, adjust the settings in the syslog server.
 
 import argparse
 
-from talklib.utils import send_sms, send_call
+from talklib.notify import Notify
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--feed_name', type=str, required=True)
@@ -22,11 +22,12 @@ elif 'live' in arg1:
 else:
     feed_name = 'unknown'
 
-
 # body of the phone call and sms
 message = f"There is a problem with the Talking Library broadcast. The {feed_name} feed is down. \
 There is more information in the email I just sent you. Please take a look and address the issue. Thank you."
 
-send_sms(message=message)
-send_call(message=message)
 
+
+camel = Notify()
+camel.send_call(message=message)
+camel.send_syslog(message=message)
