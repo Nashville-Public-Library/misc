@@ -1,7 +1,5 @@
 '''
 Send metadata to Icecast and wherever else you need it.
-Currently, this is sending to the TL Telos encoder unit,
-AND to the BrightSign unit.
 TCP is for Telos, UDP is for BrightSign.
 
 Just call up this script from the command line or a batch script and pass
@@ -9,16 +7,11 @@ in the command line argument.
 '''
 
 import argparse
-import os
 import socket
 
-import requests
+from talklib.notify import Notify
+from talklib.utils import metadata_to_icecast
 
-from talklib.show import TLShow
-from talklib import Syslog
-
-meta = TLShow()
-meta.show = 'Metadata'
 
 def get_title():
     parser = argparse.ArgumentParser()
@@ -27,39 +20,25 @@ def get_title():
     title = args.title
     return title
 
-def send_to_icecast(title):
-    sys = Syslog()
-    sys.send_syslog_message(message=f'attempting to send "{title}" to Icecast')
-    user = os.environ['icecast_user']
-    password = os.environ['icecast_pass']
-    url = f'https://npl.streamguys1.com:80/admin/metadata?mount=/live&mode=updinfo&song={title}'
-    send = requests.get(url, auth = (user, password))
-    if send.status_code != 200:
-        meta.send_notifications(
-            subject='Error', 
-            message=f'There was a problem sending metadata to Icecast. The response code was: {send.status_code}'
-            )
-    else:
-        sys.send_syslog_message(message=f'Successfully sent "{title}" to Icecast')
-
-
 def send_to_BrightSign(title):
     try:
-        sys = Syslog()
-        sys.send_syslog_message(message=f'attempting to send "{title}" to BrightSign"')
+        notify = Notify()
+        notify.syslog.send_syslog_message(message=f'attempting to send "{title}" to BrightSign')
         to_send_UDP = title.encode()
         serverAddressPort   = ("10.28.30.212", 5000)
         UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         UDPClientSocket.sendto(to_send_UDP, serverAddressPort)
-        sys.send_syslog_message(message=f'"Successfully sent {title}" to BrightSign')
+        notify.syslog.send_syslog_message(message=f'Successfully sent {title}" to BrightSign')
     except:
-        meta.send_notifications(subject='Error', message=f'There was a problem sending the title to the BrightSign unit')
+        to_send = f'There was a problem sending {title} to the BrightSign unit'
+        notify.syslog.send_syslog_message(message=to_send, level='error')
+        notify.send_mail(subject='Error', message=to_send)
 
 
 def main():
     title = get_title()
     print(f'...sending "{title}..."')
-    send_to_icecast(title=title)
+    metadata_to_icecast(title=title)
     send_to_BrightSign(title=title)
 
 main()
