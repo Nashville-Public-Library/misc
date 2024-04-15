@@ -1,8 +1,6 @@
 '''
 Converts audio files to TL format
 
-*****You need ffmpeg installed and added to your PATH*****
-
 © Nashville Public Library
 © Ben Weddle is to blame for this code. Anyone is free to use it.
 '''
@@ -18,15 +16,13 @@ glob.glob(f'*.{supported_formats[2]}') + glob.glob(f'*.{supported_formats[3]}')
 
 cd = os.getcwd() #current directory
 
-yes = ['yes', 'Yes', 'YES' 'Y', 'y']
+yes = ['yes', 'y']
 
 def convert(file):
     '''convert file with ffmpeg, etc. TODO, add better explanation'''
     subprocess.run('cls', shell=True)
     print('Just a moment...')
     subprocess.run(f'ffmpeg -hide_banner -loglevel quiet -i "{file}" -ac 1 -ar 44100 output.wav', shell=True)
-    #when converting to exe file, change the above line to:
-    #os.system(resource_path("ffmpeg -hide_banner -loglevel quiet -i input.mp3 -ar 44100 -ac 1 output.wav"))
     os.remove(file)
     os.rename("output.wav", file)
     base = os.path.splitext(file)[0]
@@ -64,7 +60,7 @@ def prompt():
     print('Are you sure you want to convert these files? It cannot be undone.')
     print()
     answer = input('Y/N ')
-    if answer in yes:
+    if answer.lower() in yes:
         check_exists()
         for f in file_types:
             convert(file=f)
