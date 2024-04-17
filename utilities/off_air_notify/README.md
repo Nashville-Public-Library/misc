@@ -6,7 +6,7 @@ TL script to notify staff of an off-air incident via SMS and phone call, which a
 The TL's silence sensor monitors several feeds for silence. When detected, the sensor sends SNMP messages to our Syslog server. When the Syslog server receives a message matching certain keywords, it will exexcute the Batch script with a command line argument (the name of the feed that has gone silent). The Batch script then executes the Python script - with the command line argument - which then connects to Twilio and sends the message and phone call out.
 
 ### Dependencies
- - The TL's [talklib](https://github.com/talkinglibrary/talklib) module must be installed!
+ - The TL's [talklib](https://github.com/Nashville-Public-Library/talklib) module must be installed!
 
 ---
 © Nashville Public Library

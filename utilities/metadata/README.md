@@ -14,7 +14,7 @@ Create a new batch file for every new program title you need to send to Icecast.
 Schedule the batch file to run at the appropriate time via WireReady.
 
 ### Dependencies
- - The TL's [talklib](https://github.com/talkinglibrary/talklib) module must be installed.
+ - The TL's [talklib](https://github.com/Nashville-Public-Library/talklib) module must be installed.
     - Instructions for downloading/installation are on the GitHub page.
 - Environment Variables `os.environ['']`
     - This script needs to access several environment variables (EG credentials for Icecast, which we can't put into Git)

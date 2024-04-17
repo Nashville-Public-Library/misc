@@ -1,7 +1,7 @@
 # talklib_examples 
 ## Using the talklib module
 
-Animal Airwaves, Bird Note, Health in a Heartbeat, and Sound Beat are all shows whose files we download ahead of time. They all use the [talklib](https://github.com/talkinglibrary/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
+Animal Airwaves, Bird Note, Health in a Heartbeat, and Sound Beat are all shows whose files we download ahead of time. They all use the [talklib](https://github.com/Nashville-Public-Library/talklib) library. The way we go about selecting which file to process is unique to each show, so here is some information about how it works and why we're doing it this way.
 
 ----
 
@@ -53,7 +53,7 @@ TL script to process Sound Beat (SB) each weekday.
 
 ----
 ## Example.bat
-- Sample `.bat` file to be used alongside a Python script that uses the [talklib package](https://github.com/talkinglibrary/talklib).
+- Sample `.bat` file to be used alongside a Python script that uses the [talklib package](https://github.com/Nashville-Public-Library/talklib).
 - Download a copy of this file, place it inside the same folder as your Python script, rename it to match the name of your Python Script, and schedule it to run in WireReady.
 -----
 © Nashville Public Library
