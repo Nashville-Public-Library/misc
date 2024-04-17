@@ -10,13 +10,13 @@ import os
 import subprocess
 
 supported_formats = ['mp3', 'wav', 'm4a', 'flac']
-
-file_types = glob.glob(f'*.{supported_formats[0]}') + glob.glob(f'*.{supported_formats[1]}') + \
-glob.glob(f'*.{supported_formats[2]}') + glob.glob(f'*.{supported_formats[3]}')
-
 cd = os.getcwd() #current directory
-
 yes = ['yes', 'y']
+
+def scan_files():
+    file_types = glob.glob(f'*.{supported_formats[0]}') + glob.glob(f'*.{supported_formats[1]}') + \
+        glob.glob(f'*.{supported_formats[2]}') + glob.glob(f'*.{supported_formats[3]}')
+    return file_types
 
 def convert(file):
     '''convert file with ffmpeg, etc. TODO, add better explanation'''
@@ -31,8 +31,8 @@ def convert(file):
 
 def check_exists():
     '''check whether there are any audio files in current directory'''
-    if len(file_types) >= 1:
-        return file_types
+    if len(scan_files()) >= 1:
+        return scan_files
     else:
         False
 
@@ -61,13 +61,13 @@ Do you want to try again?\n")
             quit()
 
     print('The following file(s) will be converted: \n')
-    for file in check_exists():
+    for file in scan_files():
         print(file)
     print('\nAre you sure you want to convert these files? It cannot be undone.\n')
 
     answer = input('Y/N ')
     if answer.lower() in yes:
-        for f in file_types:
+        for f in scan_files():
             convert(file=f)
         print('Your files are converted. Enjoy\n')
         input('(press enter to quit)')
